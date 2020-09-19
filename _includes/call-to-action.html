@@ -1,0 +1,33 @@
+<section class="" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5 center-input">  
+                <form>
+                    <div class="form-group">    
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" aria-describedby="emailHelp"
+                        placeholder="@charlidamelio" required>
+                        <div class="invalid-feedback" id="userError">
+                            Please provide a valid username.
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+          <div class="loader-holder" id="loaderHolder">
+            <div class="loader"></div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-14 center-input">  
+              <table class="table">
+                <tbody id="tableBody">
+                  <tr id="headerRow"></tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+</section>
