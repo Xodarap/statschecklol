@@ -131,10 +131,13 @@ window.ben = {};
             processData: false,
             success: function(result){
                 $('#loaderHolder').hide();
+                $('#resultsHolder').show();
                 $('thead').html('<tr id="headerRow"></tr>');
                 $('tbody').html('');
                 generateTable(result);
                 $('table').trigger('updateAll');
+                initializePlot(result);
+                doPlot(result);
             }           
         })
         return false;
@@ -149,5 +152,46 @@ window.ben = {};
         doSend();
     }
     );
+    function initializePlot(result) {
+        window.ben = window.ben || {};
+        window.ben.result = result;
+        var s = $('select');
+        s.html('');
+        for (var key in result[0]) {
+          let o = document.createElement("option");
+          let text = document.createTextNode(key);
+          o.appendChild(text);
+          s.append(o);
+        }
+        $('#xChoice').val('Views');
+        $('#yChoice').val('Likes');
+    }
+    function doPlot(result, xLabel = 'Views', yLabel = 'Likes'){
+        var y = result.map(v => +v[yLabel])
+        var x = result.map(v => +v[xLabel])
+        var text = result.map(v => v['Description'])
+        Plotly.newPlot( $('#graphHolder')[0], 
+            [{
+                x: x,
+                y: y,
+                text: text,
+                type: 'scatter',
+                mode: 'markers' }], 
+            {
+                margin:{t: 0},
+                title: 'Video Data',
+                xaxis: {
+                    title: xLabel                      
+                },
+                yaxis: {
+                    title: yLabel
+                }
+            } );
+    }
+    $('#xChoice, #yChoice').change(e => {
+        doPlot(window.ben.result, $('#xChoice').val(), $('#yChoice').val());
+    })
     $(document).ready(() =>  $('table').tablesorter());
+    $(window).ready(() => {
+    })
 })(jQuery); // End of use strict

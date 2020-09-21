@@ -107,6 +107,30 @@
             <div class="loader"></div>
           </div>
         </div>
+        <div id="resultsHolder">
+        <div class="row">
+            <div class="col-lg-14 center-input">  
+                <div id="graphHolder" style=""></div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-14 center-input">                  
+                <div class="form-group">
+                    <label for="xChoice">x-axis:</label>
+                    <select id="xChoice">
+                        <option>Views</option>
+                        <option>Comments</option>
+                    </select>
+                </div>                
+                <div class="form-group">
+                    <label for="yChoice">y-axis:</label>
+                    <select id="yChoice">
+                        <option>Views</option>
+                        <option>Comments</option>
+                    </select>
+                </div>                
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-14 center-input">  
               <table class="table">
@@ -118,6 +142,7 @@
               </table>
             </div>
         </div>
+    </div>
     </div>
 </section>
 
@@ -460,6 +485,7 @@
 <link href=https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css rel=stylesheet>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
 </body>
 
 </html>
