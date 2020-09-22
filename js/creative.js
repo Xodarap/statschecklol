@@ -107,12 +107,22 @@ if(false) {
     function generateTable(data, table) {
         generateTableHead(data[0], table);
         var body = table.children('tbody')[0]
+        var username = $('#username').val();
+        if(username[0] == '@') { username = username.substring(1,99);}
         for(let row of data) {
             let tr = document.createElement("tr");
             for (var key in row) {               
                 let td = document.createElement("td");
-                let text = document.createTextNode(row[key]);
-                td.appendChild(text);
+                if(key == 'id'){
+                    let a = document.createElement('a');
+                    a.setAttribute('href', 'https://www.tiktok.com/@' + username +'/video/' + row[key]);
+                    let text = document.createTextNode(row[key]);
+                    a.appendChild(text);
+                    td.appendChild(a);
+                } else {
+                    let text = document.createTextNode(row[key]);
+                    td.appendChild(text);
+                }
                 tr.appendChild(td);
             }
             body.appendChild(tr);
