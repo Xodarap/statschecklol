@@ -42,6 +42,13 @@ async function ts(message) {
 
 window.ben = {};
 
+if(false) {
+    window.ben.FETCH_URL = 'http://localhost:7071/api/user_fetch?';
+    window.ben.TAGS_URL = 'http://localhost:7071/api/tags?';
+} else {
+    window.ben.FETCH_URL = 'https://tiktok-fetch.azurewebsites.net/api/user_fetch?code=bHh1fXfRGBhDBd3Wjhf3vjQRbteOdhzL87mPXdoaoBgV3HhVEJToVw==';
+    window.ben.TAGS_URL = 'https://tiktok-fetch.azurewebsites.net/api/tags?code=5Rri1gAfOFIRN2xvZYNBiw3FW8IeAU4eFuBWj26LNPmsorCgiHvVaQ==';
+}
 (function($) {
     "use strict"; // Start of use strict
 
@@ -84,22 +91,22 @@ window.ben = {};
     function cleanString(s) {
         return s.replace(' ','-').replace('(','-').replace(')','-').toLowerCase();
     }
-    function generateTableHead(firstResponse) {
-        var row = $('#headerRow')[0];
+    function generateTableHead(firstResponse, table) {
+        var row = table.find('thead tr')[0];
         var names = []
         for (var key in firstResponse) {
           let th = document.createElement("th");
           //th.setAttribute('data-field', cleanString(key));
           names.push(cleanString(key))
-          let text = document.createTextNode(key + '⬘');
+          let text = document.createTextNode(key);
           th.appendChild(text);
           row.appendChild(th);
         }
         return names;
       }
-    function generateTable(data) {
-        generateTableHead(data[0]);
-        var body = $('#tableBody')[0];
+    function generateTable(data, table) {
+        generateTableHead(data[0], table);
+        var body = table.children('tbody')[0]
         for(let row of data) {
             let tr = document.createElement("tr");
             for (var key in row) {               
@@ -113,36 +120,47 @@ window.ben = {};
     }
 
     async function doSend() {
+        $('#resultsHolder, #cachedWarning').hide();
+
         var data = new FormData();
         var username = $('#username').val();
         if(username[0] == '@') { username = username.substring(1,99);}
-        var url;
-        if(false) {
-            url = 'http://localhost:7071/api/classify?';
-        }else {
-            url = 'https://tiktok-fetch.azurewebsites.net/api/classify?code=r61Ga5aC8p6pthvMBlrbNdGLtQUZ13baT4lLz6rjhYYOqa6b9Wlhvw==';
-        } 
         var tsv = await ts(username);
-        url = url + '&name=' + username + '&ts=' + tsv;
+        var url = window.ben.FETCH_URL + '&name=' + username + '&ts=' + tsv;
         $.ajax({url: url, 
             data: data,
             type: 'POST',
             contentType: false,
             processData: false,
-            success: function(result){
+            success: function(r){
+                var result = r.results;
+                $('#cachedWarning').toggle(r.cached);
                 $('#loaderHolder').hide();
                 $('#resultsHolder').show();
-                $('thead').html('<tr id="headerRow"></tr>');
+                $('thead').html('<tr></tr>');
                 $('tbody').html('');
-                generateTable(result);
-                $('table').trigger('updateAll');
+                generateTable(result, $('#videosTable'));
                 initializePlot(result);
                 doPlot(result);
+                getTags(username, tsv);
             }           
         })
         return false;
-
     }
+
+    async function getTags(author, tsv) {
+        var url = window.ben.TAGS_URL + '&ts=' + tsv + '&author=' + author;
+        $('#tagLoaderHolder').show();
+        $.ajax({url: url, 
+            type: 'POST',
+            success: function(result){
+                $('#tagLoaderHolder').hide();
+                generateTable(result, $('#tagsTable'));
+                $('table').trigger('updateAll');
+            }           
+        })
+    }
+
     // Initialize WOW.js Scrolling Animations
     new WOW().init();
     $('#submitButton').click((event) =>
@@ -150,8 +168,8 @@ window.ben = {};
         event.preventDefault();
         $('#loaderHolder').show();
         doSend();
-    }
-    );
+    });
+
     function initializePlot(result) {
         window.ben = window.ben || {};
         window.ben.result = result;
@@ -166,6 +184,7 @@ window.ben = {};
         $('#xChoice').val('Views');
         $('#yChoice').val('Likes');
     }
+
     function doPlot(result, xLabel = 'Views', yLabel = 'Likes'){
         var y = result.map(v => +v[yLabel])
         var x = result.map(v => +v[xLabel])
@@ -188,10 +207,10 @@ window.ben = {};
                 }
             } );
     }
+
     $('#xChoice, #yChoice').change(e => {
         doPlot(window.ben.result, $('#xChoice').val(), $('#yChoice').val());
-    })
-    $(document).ready(() =>  $('table').tablesorter());
-    $(window).ready(() => {
-    })
+    });
+    $(document).ready(() =>  {$('table').tablesorter({theme: 'bootstrap'})});
+    $(window).ready(() => { });
 })(jQuery); // End of use strict

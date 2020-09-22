@@ -10,6 +10,9 @@
                         <div class="invalid-feedback" id="userError">
                             Please provide a valid username.
                         </div>
+                        <div class="invalid-feedback" id="cachedWarning">
+                            Note: This username has already been fetched in the last 24 hours. Using cached data.
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                 </form>
@@ -20,41 +23,5 @@
             <div class="loader"></div>
           </div>
         </div>
-        <div id="resultsHolder">
-        <div class="row">
-            <div class="col-lg-14 center-input">  
-                <div id="graphHolder" style=""></div>
-          </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-14 center-input">                  
-                <div class="form-group">
-                    <label for="xChoice">x-axis:</label>
-                    <select id="xChoice">
-                        <option>Views</option>
-                        <option>Comments</option>
-                    </select>
-                </div>                
-                <div class="form-group">
-                    <label for="yChoice">y-axis:</label>
-                    <select id="yChoice">
-                        <option>Views</option>
-                        <option>Comments</option>
-                    </select>
-                </div>                
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-14 center-input">  
-              <table class="table">
-                  <thead>
-                    <tr id="headerRow"></tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-              </table>
-            </div>
-        </div>
-    </div>
     </div>
 </section>
